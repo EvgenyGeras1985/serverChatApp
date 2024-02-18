@@ -1,6 +1,5 @@
-const {Sequelize} = require('sequelize');
-
-//import ORM lib to connect with mySql dataBase on my HOST
+const { Sequelize } = require('sequelize');
+//импорт sequelize
 
 module.exports = new Sequelize(
     process.env.DB_NAME,
@@ -9,6 +8,6 @@ module.exports = new Sequelize(
     {
         dialect: "mysql",
         host: process.env.DB_HOST,
-        port: process.env.DB_PROT
+        port: process.env.DB_PORT
     }
 )
