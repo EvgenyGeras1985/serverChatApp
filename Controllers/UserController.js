@@ -1,5 +1,7 @@
 const {User} = require("../models/models");
 const ApiError = require("../Error/ApiError");
+const path = require("path");
+const uuid = require("uuid");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -7,6 +9,9 @@ class UserController{
     async registration(req, res,next){
         try{
             const {mail, password,nickname} = req.body;
+            const {img} = req.files;
+            let fileName = uuid.v4() + ".jpg";
+            img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             if(!mail || !password) return res.json('Некорректный email или password');
 
@@ -15,8 +20,9 @@ class UserController{
             const user = await User.create({
                 mail,
                 password: hashPassword,
-                nickname
-            },{fields:['mail','password','nickname']});
+                nickname,
+                img: fileName
+            },{fields:['mail','password','nickname', "img"]});
 
 
             const token = jwt.sign({
@@ -30,7 +36,7 @@ class UserController{
 
             return res.json({token})
         }catch(err){
-            console.log(err);
+            next(ApiError.badRequest(err.message))
         }
     }
 
