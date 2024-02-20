@@ -1,16 +1,34 @@
 const {User} = require("../models/models");
 const ApiError = require("../Error/ApiError");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 class UserController{
     async registration(req, res,next){
         try{
-            // const {mail, password} = req.body;
+            const {mail, password,nickname} = req.body;
+
+            if(!mail || !password) return res.json('Некорректный email или password');
+
+            const hashPassword = await bcrypt.hash(password, 5);
+
             const user = await User.create({
-                mail: req.body.mail,
-                password: req.body.password,
-                nickname: req.body.nickname
-            })
-            return res.json({message:"done"})
+                mail,
+                password: hashPassword,
+                nickname
+            },{fields:['mail','password','nickname']});
+
+
+            const token = jwt.sign({
+                    id:user.id,
+                    mail:user.mail,
+                    role:user.role
+                },
+                process.env.SECRET_KEY,
+                {expiresIn: '2h'}
+            );
+
+            return res.json({token})
         }catch(err){
             console.log(err);
         }
@@ -22,11 +40,6 @@ class UserController{
 
     async userAuth(req, res, next){
         return console.log("test user Auth");
-    }
-
-    async getAll(req,res,next){
-        const users = await User.findAll()
-        return res.json(users);
     }
 }
 
