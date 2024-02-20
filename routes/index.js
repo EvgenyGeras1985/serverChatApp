@@ -1,9 +1,7 @@
 const Router = require("express");
 const router = new Router();
-const usersRouter = require("./usersRoutes");
+const usersRoutes =  require("./usersRoutes");
 
-router.use('/users', (req,res) => {
-    return res.json({message: "test reg"})
-})
+router.use('/users', usersRoutes)
 
 module.exports = router;
