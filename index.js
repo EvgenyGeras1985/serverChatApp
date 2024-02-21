@@ -4,9 +4,10 @@ const express = require("express");
 const router = require("./routes/index");
 const sequelize = require('./db.config');
 const cors = require("cors");
+const path = require("path");
 const fileUpload = require("express-fileupload");
 const errorHandler = require("./middleware/errorHandlingMiddleWare");
-const path = require("path")
+
 
 const PORT = 9100;
 
@@ -20,7 +21,7 @@ app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}));
 app.use('/api', router);
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 
 const start = async () => {

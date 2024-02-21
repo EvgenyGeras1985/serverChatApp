@@ -13,7 +13,17 @@ class UserController{
             let fileName = uuid.v4() + ".jpg";
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
-            if(!mail || !password) return res.json('Некорректный email или password');
+            if(!mail || !password) {
+                return next(ApiError.badRequest('Not correct mail or pass'))
+            }
+
+            const candidate = await User.findOne({
+                where:{mail}
+            })
+
+            if(candidate){
+                return next(ApiError.badRequest('Такой пользователь уже существует'))
+            }
 
             const hashPassword = await bcrypt.hash(password, 5);
 
@@ -41,11 +51,28 @@ class UserController{
     }
 
     async userLog(req, res, next){
-        return console.log("user log");
+        try{
+            const { password, mail } = req.body;
+
+            if(!mail || !password) {
+                return next(ApiError.badRequest('Некорректный email или password'))
+            }
+
+        }catch (err){
+            next(ApiError.badRequest(err.message))
+        };
     }
 
     async userAuth(req, res, next){
-        return console.log("test user Auth");
+        try{
+            const {id} = req.query;
+            if(!id){
+               return next(ApiError.badRequest("ID не указан wow"))
+            }
+            res.json(id);
+        }catch (err){
+
+        };
     }
 }
 

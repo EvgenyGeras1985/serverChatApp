@@ -7,7 +7,7 @@ class ApiError extends Error{
 
     static badRequest(message){
         //client side error
-        return new ApiError(400, message);
+        return new ApiError(404, message);
     }
 
     static notAuth(message){
@@ -16,6 +16,10 @@ class ApiError extends Error{
 
     static  Internal(message){
         return new ApiError(500, message);
+    }
+
+    static  Forbidden(message){
+        return new ApiError(403, message);
     }
 
     static  badGateway(message){
