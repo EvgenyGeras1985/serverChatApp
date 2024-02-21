@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { Op } = require("sequelize");
 
+
 class UserController{
     async registration(req, res,next){
         try{
@@ -39,9 +40,9 @@ class UserController{
 
 
             const token = jwt.sign({
-                    id:user.id,
-                    mail:user.mail,
-                    role:user.role
+                    id: user.id,
+                    mail: user.mail,
+                    role: user.role
                 },
                 process.env.SECRET_KEY,
                 {expiresIn: '2h'}
